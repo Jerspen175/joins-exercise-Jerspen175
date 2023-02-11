@@ -37,15 +37,23 @@ ON distributor_id= domestic_distributor_id
 WHERE specs.film_title IS NULL OR specs.film_title IS NOT NULL
 GROUP BY company_name, film_title;
 -- 5. Write a query that returns the five distributors with the highest average movie budget.
-SELECT DISTINCT(company_name), AVG(film_budget)
+SELECT DISTINCT distributors.company_name, AVG(film_budget)
 FROM distributors
 LEFT JOIN specs
 ON distributor_id = domestic_distributor_id
 LEFT JOIN revenue 
 ON specs.movie_id=revenue.movie_id
 WHERE film_budget IS NOT NULL
-GROUP BY DISTINCT distributors.company_name, film_budget
-ORDER BY AVG(film_budget) DESC;
+GROUP BY  distributors.company_name
+ORDER BY AVG(film_budget) DESC
+LIMIT 5;
 -- 6. How many movies in the dataset are distributed by a company which is not headquartered in California? Which of these movies has the highest imdb rating?
+SELECT film_title, company_name, headquarters, imdb_rating
+FROM distributors
+LEFT JOIN specs
+ON distributor_id=domestic_distributor_id
+LEFT JOIN rating 
+ON specs.movie_id=rating.movie_id
+WHERE headquarters<> '%,CA';
 
 -- 7. Which have a higher average rating, movies which are over two hours long or movies which are under two hours?
