@@ -16,6 +16,7 @@ GROUP BY release_year, rating.imdb_rating
 ORDER BY imdb_rating DESC
 LIMIT 5;
 --- 2008
+
 -- 3. What is the highest grossing G-rated movie? Which company distributed it?
 SELECT film_title, worldwide_gross, mpaa_rating, company_name
 FROM distributors
@@ -27,11 +28,24 @@ WHERE specs.mpaa_rating ='G'
 ORDER BY revenue.worldwide_gross DESC
 LIMIT 5;
 --- Toy Story 4, Walt Disney
--- 4. Write a query that returns, for each distributor in the distributors table, the distributor name and the number of movies associated with that distributor in the movies 
--- table. Your result set should include all of the distributors, whether or not they have any movies in the movies table.
 
+-- 4. Write a query that returns, for each distributor in the distributors table, the distributor name and the number of movies associated with that distributor in the movies table. Your result set should include all of the distributors, whether or not they have any movies in the movies table.
+SELECT DISTINCT company_name, COUNT(film_title)
+FROM distributors
+LEFT JOIN specs 
+ON distributor_id= domestic_distributor_id
+WHERE specs.film_title IS NULL OR specs.film_title IS NOT NULL
+GROUP BY company_name, film_title;
 -- 5. Write a query that returns the five distributors with the highest average movie budget.
-
+SELECT DISTINCT(company_name), AVG(film_budget)
+FROM distributors
+LEFT JOIN specs
+ON distributor_id = domestic_distributor_id
+LEFT JOIN revenue 
+ON specs.movie_id=revenue.movie_id
+WHERE film_budget IS NOT NULL
+GROUP BY DISTINCT distributors.company_name, film_budget
+ORDER BY AVG(film_budget) DESC;
 -- 6. How many movies in the dataset are distributed by a company which is not headquartered in California? Which of these movies has the highest imdb rating?
 
 -- 7. Which have a higher average rating, movies which are over two hours long or movies which are under two hours?
