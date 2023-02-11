@@ -54,6 +54,8 @@ LEFT JOIN specs
 ON distributor_id=domestic_distributor_id
 LEFT JOIN rating 
 ON specs.movie_id=rating.movie_id
-WHERE headquarters<> '%,CA';
+WHERE headquarters NOT LIKE '%CA%'
+ORDER BY imdb_rating DESC;
+--- Two comapanies are not in CA. Dirty Dancing was the highest grossing film made a company not in CA(The comapny is Vestron Pictures in Chicago,Ill.)
 
 -- 7. Which have a higher average rating, movies which are over two hours long or movies which are under two hours?
